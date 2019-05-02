@@ -3,6 +3,7 @@ import java.util.*;
 import oscP5.*;
 import controlP5.*;
 import static controlP5.ControlP5.*;
+import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
 
 OscP5 osc;
 ControlP5 cp;
