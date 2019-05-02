@@ -10,6 +10,10 @@ import static controlP5.ControlP5.*;
 OscP5 osc;
 ControlP5 cp;
 
+List<Fighters> fighters = new ArrayList();
+Fighters f1 = new Fighters();
+
+
 void setup() {
   fullScreen(P3D);
   //size(1280, 600, P3D);
@@ -18,7 +22,6 @@ void setup() {
   hint(DISABLE_DEPTH_TEST);
   osc = new OscP5(this, 4559);
   cp = new ControlP5(this);
-
   float y = height-40;
   cp.addSlider("len").setPosition(20,y).setSize(200,20).setRange(0,100).setValue(50);
   cp.addToggle("x").setPosition(250,y).setSize(20,20).setValue(false);
@@ -56,6 +59,28 @@ float scl = 0.25; /* zoom factor while rendering */
 int len;
 List<Data> log = new ArrayList();
 
+
+
+class Data {
+  float ax, ay, az;
+  String name;
+  
+
+  public String toString() {
+    return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
+  }
+}
+
+
+class Fighters {
+  int life = 100;
+  public void hit(){
+    this.life = this.life - 20;
+  }
+  public String toString() {
+    return "Life : " + life + "\n";
+  }
+}
 
 void render() {
   if (log.size()<=0) {
@@ -99,16 +124,6 @@ void render() {
 }
 
 
-class Data {
-  float ax, ay, az;
-  String name;
-  public String toString() {
-    return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
-  }
-}
-
-
-
 void oscEvent(OscMessage m) {
 
   print("addrpattern: "+m.addrPattern());
@@ -119,19 +134,25 @@ void oscEvent(OscMessage m) {
   }
   if (m.addrPattern().startsWith("/IMU")) {
     Data data = new Data();
+ 
+    //Fighters f2 = new Fighters();
+    
     data.ax = m.get(0).floatValue();
     data.ay = m.get(1).floatValue();
     data.az = m.get(2).floatValue(); // not used here
     data.name = m.get(3).toString(); // not used here
     println(data);
     log.add(data);
-    
+    fighters.add(f1);
+    //fighters.add(f2);
     print("valeur absolue : " );
     println(abs(data.ax) + abs(data.ay) + abs(data.az));
     
     if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 5)
     {
-      println("choc");
+      println("BIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIM");
+      f1.hit();
+      println("Vie :" + f1.life);
     }
   }
   
