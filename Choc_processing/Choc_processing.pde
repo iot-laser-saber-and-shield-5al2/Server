@@ -125,5 +125,14 @@ void oscEvent(OscMessage m) {
     data.name = m.get(3).toString(); // not used here
     println(data);
     log.add(data);
+    
+    print("valeur absolue : " );
+    println(abs(data.ax) + abs(data.ay) + abs(data.az));
+    
+    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 5)
+    {
+      println("choc");
+    }
   }
+  
 }
