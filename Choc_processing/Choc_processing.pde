@@ -9,6 +9,7 @@ import static controlP5.ControlP5.*;
 
 OscP5 osc;
 ControlP5 cp;
+int vie = 100 ; 
 
 void setup() {
   fullScreen(P3D);
@@ -131,7 +132,10 @@ void oscEvent(OscMessage m) {
     
     if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 5)
     {
-      println("choc");
+      println("CHOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOC");
+      vie = vie - 30;
+      println("valeur de vie : " + vie);
+      
     }
   }
   
