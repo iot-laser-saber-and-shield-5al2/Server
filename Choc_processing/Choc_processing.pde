@@ -9,7 +9,8 @@ import static controlP5.ControlP5.*;
 
 OscP5 osc;
 ControlP5 cp;
-int vie = 100 ; 
+int vie = 100 ;
+//boolean combat_en_cours = true;
 
 void setup() {
   fullScreen(P3D);
@@ -132,9 +133,17 @@ void oscEvent(OscMessage m) {
     
     if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 5)
     {
+      vie = vie - 10;
       println("CHOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOC");
-      vie = vie - 30;
-      println("valeur de vie : " + vie);
+      if(vie > 0) 
+      {       
+        println("valeur de vie : " + vie);
+      }
+      else
+      {
+         println("fin de la partie");
+         exit();
+      }
       
     }
   }
