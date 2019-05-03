@@ -5,7 +5,8 @@ import controlP5.*;
 import static controlP5.ControlP5.*;
 import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
 import processing.sound.*;
-SoundFile file;
+SoundFile fight_sound;
+SoundFile starwars_music;
 OscP5 osc;
 ControlP5 cp;
 int vie = 400 ;
@@ -41,8 +42,10 @@ void setup() {
 
   background(0);
   noStroke();
-  file = new SoundFile(this, "sound.mp3");
-  file.play();
+  fight_sound = new SoundFile(this, "fight_sound.mp3");
+  starwars_music = new SoundFile(this, "starwars_music.mp4");
+  fight_sound.play();
+  starwars_music.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -157,7 +160,7 @@ void oscEvent(OscMessage m) {
     
     if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
     {
-      file.play();
+      fight_sound.play();
       println("---------------------------------------------------------------------------------------------------------------------------");
       if(j1.capteur.equals(data.name)){
         j2.hit();
