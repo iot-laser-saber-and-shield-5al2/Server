@@ -5,10 +5,12 @@ import controlP5.*;
 import static controlP5.ControlP5.*;
 import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
 import processing.sound.*;
+
 SoundFile fight_sound;
 SoundFile starwars_music;
 OscP5 osc;
 ControlP5 cp;
+
 int vie = 400 ;
 //boolean combat_en_cours = true;
 List<Fighters> fighters = new ArrayList();
@@ -27,7 +29,6 @@ class Fighters {
 
 void setup() {
   fullScreen(P3D);
-  //size(1280, 600, P3D);
 
   smooth(8);
   hint(DISABLE_DEPTH_TEST);
@@ -42,6 +43,8 @@ void setup() {
 
   background(0);
   noStroke();
+  
+  // music
   fight_sound = new SoundFile(this, "fight_sound.mp3");
   starwars_music = new SoundFile(this, "starwars_music.mp4");
   fight_sound.play();
@@ -121,24 +124,20 @@ void render() {
 class Data {
   float ax, ay, az;
   String name;
+  
   public String toString() {
     return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
   }
 }
 
-
-
 void oscEvent(OscMessage m) {
-  
-  //print("addrpattern: "+m.addrPattern());
-  //println(" - floatValue: "+m.get(0).floatValue());
 
   if ( j1.capteur == null){
-    j1.capteur =  m.get(3).toString();
+    j1.capteur = m.get(3).toString();
     println("Joueur 1 possède le capteur " + j1.capteur);
   }
   else if(  j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
-    j2.capteur =   m.get(3).toString();
+    j2.capteur = m.get(3).toString();
     println("Joueur 2 possède le capteur " + j2.capteur);
   }
   
@@ -152,11 +151,7 @@ void oscEvent(OscMessage m) {
     data.az = m.get(2).floatValue(); // not used here
     data.name = m.get(3).toString(); // not used here
 
-    //println(data);
     log.add(data);
-    
-    //print("valeur absolue : " );
-    //println(abs(data.ax) + abs(data.ay) + abs(data.az));
     
     if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
     {
