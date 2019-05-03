@@ -49,13 +49,10 @@ void setup() {
   
   // music
   fight_sound = new SoundFile(this, "fight_sound.mp3");
-<<<<<<< HEAD
-  starwars_music = new SoundFile(this, "star.mp4");
-=======
+
   starwars_music = new SoundFile(this, "starwars_music.mp3");
   light_saber_music = new SoundFile(this, "LightSaberContact.wav");
   light_saber_duel = new SoundFile(this, "LightSaberDuel.wav");
->>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
   fight_sound.play();
   starwars_music.play();
   //light_saber_music.play();
@@ -200,19 +197,11 @@ void oscEvent(OscMessage m) {
           println("P1: " + j1.life);
           if(j2.life > 0) 
           {       
-<<<<<<< HEAD
-            println("valeur de vie joueur bleu : " + j2.life);
-=======
             println("Life of player 2 : " + j2.life);
->>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
           }
           else
           {
-<<<<<<< HEAD
-             println("Joueur bleu a gagner ");
-=======
              println("Player 1 won");
->>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
              exit();
           }
         }  
@@ -237,19 +226,11 @@ void oscEvent(OscMessage m) {
           println("P2: " + j2.life);
           if(j1.life > 0) 
           {       
-<<<<<<< HEAD
-            println("valeur de vie joueur rouge : " + j1.life);
-=======
             println("Life of player 1 : " + j1.life);
->>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
           }
           else
           {
-<<<<<<< HEAD
-             println("Joueur rouge a gagner");
-=======
              println("Player 2 won");
->>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
              exit();
           }
         }
