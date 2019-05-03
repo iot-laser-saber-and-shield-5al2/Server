@@ -19,6 +19,7 @@ Fighters j2 = new Fighters();
 class Fighters {
   int life = 400;
   String capteur;
+  List<Data> datas = new ArrayList();
   public void hit(){
     this.life = this.life - 20;
   }
@@ -125,6 +126,7 @@ class Data {
   float ax, ay, az;
   String name;
   int hours, minutes, seconds;
+  boolean isChoc = false;
   public String toString() {
     return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
   }
@@ -165,8 +167,19 @@ void oscEvent(OscMessage m) {
     if(isThreshold(data))
     {
       fight_sound.play();
+      data.isChoc = true;
       println("---------------------------------------------------------------------------------------------------------------------------");
       if(j1.capteur.equals(data.name)){
+        List<Data> subj2Data = j2.datas.subList(j2.datas.size() -6, j2.datas.size() -1);
+        for(Data dataj2 : subj2Data)
+        {
+          if(dataj2.isChoc)
+          {
+             println("Sword Contact! ");
+             exit();
+          }
+        }
+        
         j2.hit();
         println(j2.life);
         if(j2.life > 0) 
@@ -179,7 +192,17 @@ void oscEvent(OscMessage m) {
            exit();
         }
       }
-      else if (j2.capteur.equals(data.name)){  
+      else if (j2.capteur.equals(data.name)){
+        List<Data> subj1Data = j1.datas.subList(j1.datas.size() -6, j1.datas.size() -1);
+        for(Data dataj1 : subj1Data)
+        {
+          if(dataj1.isChoc)
+          {
+             println("Sword Contact! ");
+             exit();
+          }
+        }
+        
         j1.hit();
         if(j1.life > 0) 
         {       
@@ -190,8 +213,16 @@ void oscEvent(OscMessage m) {
            println("Player 2 won");
            exit();
         }
-      }
-      
+      }   
+    }
+    
+    if(j1.capteur.equals(data.name))
+    {
+      j1.datas.add(data);
+    }
+    else if (j2.capteur.equals(data.name))
+    {
+      j2.datas.add(data);
     }
   }
   
