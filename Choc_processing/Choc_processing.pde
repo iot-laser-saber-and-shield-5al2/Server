@@ -10,6 +10,7 @@ SoundFile fight_sound;
 SoundFile starwars_music;
 OscP5 osc;
 ControlP5 cp;
+
 int vie = 400 ;
 //boolean combat_en_cours = true;
 List<Fighters> fighters = new ArrayList();
@@ -28,7 +29,6 @@ class Fighters {
 
 void setup() {
   fullScreen(P3D);
-  //size(1280, 600, P3D);
 
   smooth(8);
   hint(DISABLE_DEPTH_TEST);
@@ -43,6 +43,8 @@ void setup() {
 
   background(0);
   noStroke();
+  
+  // music
   fight_sound = new SoundFile(this, "fight_sound.mp3");
   starwars_music = new SoundFile(this, "starwars_music.mp3");
   fight_sound.play();
@@ -122,44 +124,45 @@ void render() {
 class Data {
   float ax, ay, az;
   String name;
+  int hours, minutes, seconds;
   public String toString() {
     return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
   }
 }
 
-
+boolean isThreshold(Data data)
+{
+  return (abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4;
+}
 
 void oscEvent(OscMessage m) {
-  
-  //print("addrpattern: "+m.addrPattern());
-  //println(" - floatValue: "+m.get(0).floatValue());
 
   if ( j1.capteur == null){
-    j1.capteur =  m.get(3).toString();
-    println("Joueur 1 possède le capteur " + j1.capteur);
+    j1.capteur = m.get(3).toString();
+    println("Player 1 got the captor " + j1.capteur);
   }
   else if(  j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
-    j2.capteur =   m.get(3).toString();
-    println("Joueur 2 possède le capteur " + j2.capteur);
+    j2.capteur = m.get(3).toString();
+    println("Player 2 got the captor " + j2.capteur);
   }
   
   if (log.size()==800) {
     log.remove(0);
   }
+  
   if (m.addrPattern().startsWith("/IMU")) {
     Data data = new Data();
     data.ax = m.get(0).floatValue();
     data.ay = m.get(1).floatValue();
     data.az = m.get(2).floatValue(); // not used here
     data.name = m.get(3).toString(); // not used here
-
-    //println(data);
+    data.hours = hour();
+    data.minutes = minute();
+    data.seconds = second();
+    
     log.add(data);
     
-    //print("valeur absolue : " );
-    //println(abs(data.ax) + abs(data.ay) + abs(data.az));
-    
-    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
+    if(isThreshold(data))
     {
       fight_sound.play();
       println("---------------------------------------------------------------------------------------------------------------------------");
@@ -167,26 +170,26 @@ void oscEvent(OscMessage m) {
         j2.hit();
         println(j2.life);
         if(j2.life > 0) 
-          {       
-            println("valeur de vie joueur 2 : " + j2.life);
-          }
+        {       
+          println("Life of player 2 : " + j2.life);
+        }
         else
-          {
-             println("Joueur 1 a gagner ");
-             exit();
-          }
+        {
+           println("Player 1 won");
+           exit();
+        }
       }
       else if (j2.capteur.equals(data.name)){  
         j1.hit();
         if(j1.life > 0) 
-          {       
-            println("valeur de vie joueur 1 : " + j1.life);
-          }
+        {       
+          println("Life of player 1 : " + j1.life);
+        }
         else
-          {
-             println("Joueur 2 a gagner");
-             exit();
-          }
+        {
+           println("Player 2 won");
+           exit();
+        }
       }
       
     }
