@@ -124,10 +124,15 @@ void render() {
 class Data {
   float ax, ay, az;
   String name;
-  
+  int hours, minutes, seconds;
   public String toString() {
     return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
   }
+}
+
+boolean isThreshold(Data data)
+{
+  return (abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4;
 }
 
 void oscEvent(OscMessage m) {
@@ -144,16 +149,20 @@ void oscEvent(OscMessage m) {
   if (log.size()==800) {
     log.remove(0);
   }
+  
   if (m.addrPattern().startsWith("/IMU")) {
     Data data = new Data();
     data.ax = m.get(0).floatValue();
     data.ay = m.get(1).floatValue();
     data.az = m.get(2).floatValue(); // not used here
     data.name = m.get(3).toString(); // not used here
-
+    data.hours = hour();
+    data.minutes = minute();
+    data.seconds = second();
+    
     log.add(data);
     
-    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
+    if(isThreshold(data))
     {
       fight_sound.play();
       println("---------------------------------------------------------------------------------------------------------------------------");
