@@ -4,16 +4,17 @@ import oscP5.*;
 import controlP5.*;
 import static controlP5.ControlP5.*;
 import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
-
+import processing.sound.*;
+SoundFile file;
 OscP5 osc;
 ControlP5 cp;
-int vie = 100 ;
+int vie = 400 ;
 //boolean combat_en_cours = true;
 List<Fighters> fighters = new ArrayList();
 Fighters j1 = new Fighters();
 Fighters j2 = new Fighters();
 class Fighters {
-  int life = 100;
+  int life = 400;
   String capteur;
   public void hit(){
     this.life = this.life - 20;
@@ -40,6 +41,8 @@ void setup() {
 
   background(0);
   noStroke();
+  file = new SoundFile(this, "sound.mp3");
+  file.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -123,7 +126,7 @@ class Data {
 
 
 void oscEvent(OscMessage m) {
-
+  
   //print("addrpattern: "+m.addrPattern());
   //println(" - floatValue: "+m.get(0).floatValue());
 
@@ -152,8 +155,9 @@ void oscEvent(OscMessage m) {
     //print("valeur absolue : " );
     //println(abs(data.ax) + abs(data.ay) + abs(data.az));
     
-    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 5)
+    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
     {
+      file.play();
       println("---------------------------------------------------------------------------------------------------------------------------");
       if(j1.capteur.equals(data.name)){
         j2.hit();
