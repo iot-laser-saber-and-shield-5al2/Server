@@ -3,8 +3,9 @@ import java.util.*;
 import oscP5.*;
 import controlP5.*;
 import static controlP5.ControlP5.*;
-import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
+import processing.serial.*;
 import processing.sound.*;
+
 SoundFile fight_sound;
 SoundFile starwars_music;
 OscP5 osc;
@@ -43,7 +44,7 @@ void setup() {
   background(0);
   noStroke();
   fight_sound = new SoundFile(this, "fight_sound.mp3");
-  starwars_music = new SoundFile(this, "starwars_music.mp4");
+  starwars_music = new SoundFile(this, "starwars_music.mp3");
   fight_sound.play();
   starwars_music.play();
 }
