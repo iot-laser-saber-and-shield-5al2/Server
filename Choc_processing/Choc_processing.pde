@@ -22,6 +22,7 @@ Fighters j2 = new Fighters();
 class Fighters {
   int life = 400;
   String capteur;
+  String name;
   List<Data> datas = new ArrayList();
   public void hit(){
     this.life = this.life - 20;
@@ -144,15 +145,50 @@ boolean isThreshold(Data data)
   return (abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4;
 }
 
+void Fight(Fighters attacker, Fighters defender){
+  boolean isSwordFight = false;
+  List<Data> subdefenderData = defender.datas.subList(defender.datas.size() -6, defender.datas.size() -1);
+  for(Data dataDefender : subdefenderData)
+  {
+    if(dataDefender.isChoc)
+    {
+       println("Sword Contact! ");
+       isSwordFight = true;
+       light_saber_duel.play();
+       break;
+    }
+  }
+  
+  if(isSwordFight == false)
+  {
+    light_saber_music.play();
+    defender.hit();
+    println("Life of " + attacker.name + ": " + attacker.life);
+    if(defender.life > 0) 
+    {       
+      println("Life of " + defender.name + " : " + defender.life);
+    }
+    else
+    {
+       println(attacker.name + " won");
+       win_sound.play();
+       delay(2000);
+       exit();
+    }
+  }  
+}
+
 void oscEvent(OscMessage m) {
 
   if ( j1.capteur == null){
     j1.capteur = m.get(3).toString();
-    println("Player 1 got the captor " + j1.capteur);
+    j1.name = "Player 1";
+    println(j1.name + " got the captor " + j1.capteur);
   }
   else if(j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
     j2.capteur = m.get(3).toString();
-    println("Player 2 got the captor " + j2.capteur);
+    j2.name = "Player 2";
+    println(j2.name + " got the captor " + j2.capteur);
   }
   
   if (log.size()==800) {
@@ -176,68 +212,11 @@ void oscEvent(OscMessage m) {
       //fight_sound.play();
       data.isChoc = true;
       println("---------------------------------------------------------------------------------------------------------------------------");
-      boolean isSwordFight = false;
       if(j1.capteur.equals(data.name)){
-        List<Data> subj2Data = j2.datas.subList(j2.datas.size() -6, j2.datas.size() -1);
-        for(Data dataj2 : subj2Data)
-        {
-          if(dataj2.isChoc)
-          {
-             println("Sword Contact! ");
-             isSwordFight = true;
-             light_saber_duel.play();
-             break;
-          }
-        }
-        
-        if(isSwordFight == false)
-        {
-          light_saber_music.play();
-          j2.hit();
-          println("P1: " + j1.life);
-          if(j2.life > 0) 
-          {       
-            println("Life of player 2 : " + j2.life);
-          }
-          else
-          {
-             println("Player 1 won");
-             win_sound.play();
-             delay(2000);
-             exit();
-          }
-        }  
+        Fight(j1, j2);
       }
       else if (j2.capteur.equals(data.name)){
-        List<Data> subj1Data = j1.datas.subList(j1.datas.size() -6, j1.datas.size() -1);
-        for(Data dataj1 : subj1Data)
-        {
-          if(dataj1.isChoc)
-          {
-             println("Sword Contact! ");
-             isSwordFight = true;
-             light_saber_duel.play();
-             exit();
-          }
-        }
-        
-        if(isSwordFight == false)
-        {
-          light_saber_music.play();
-          j1.hit();
-          println("P2: " + j2.life);
-          if(j1.life > 0) 
-          {       
-            println("Life of player 1 : " + j1.life);
-          }
-          else
-          {
-             println("Player 2 won");
-             win_sound.play();
-             delay(2000);
-             exit();
-          }
-        }
+        Fight(j2, j1);
       }   
     }
     
