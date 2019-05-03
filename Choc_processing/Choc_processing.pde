@@ -9,6 +9,7 @@ import processing.sound.*;
 SoundFile fight_sound;
 SoundFile starwars_music;
 SoundFile light_saber_music;
+SoundFile light_saber_duel;
 OscP5 osc;
 ControlP5 cp;
 
@@ -50,9 +51,11 @@ void setup() {
   fight_sound = new SoundFile(this, "fight_sound.mp3");
   starwars_music = new SoundFile(this, "starwars_music.mp3");
   light_saber_music = new SoundFile(this, "LightSaberContact.wav");
+  light_saber_duel = new SoundFile(this, "LightSaberDuel.wav");
   fight_sound.play();
   starwars_music.play();
-  light_saber_music.play();
+  //light_saber_music.play();
+  //light_saber_duel.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -170,7 +173,6 @@ void oscEvent(OscMessage m) {
     if(isThreshold(data))
     {
       //fight_sound.play();
-      light_saber_music.play();
       data.isChoc = true;
       println("---------------------------------------------------------------------------------------------------------------------------");
       boolean isSwordFight = false;
@@ -182,25 +184,26 @@ void oscEvent(OscMessage m) {
           {
              println("Sword Contact! ");
              isSwordFight = true;
-             fight_sound.play();
+             light_saber_duel.play();
              break;
           }
         }
-        if(isSwordFight)
+        
+        if(isSwordFight == false)
         {
-          exit();
-        }
-        j2.hit();
-        println("P1: " + j1.life);
-        if(j2.life > 0) 
-        {       
-          println("Life of player 2 : " + j2.life);
-        }
-        else
-        {
-           println("Player 1 won");
-           exit();
-        }
+          light_saber_music.play();
+          j2.hit();
+          println("P1: " + j1.life);
+          if(j2.life > 0) 
+          {       
+            println("Life of player 2 : " + j2.life);
+          }
+          else
+          {
+             println("Player 1 won");
+             exit();
+          }
+        }  
       }
       else if (j2.capteur.equals(data.name)){
         List<Data> subj1Data = j1.datas.subList(j1.datas.size() -6, j1.datas.size() -1);
@@ -210,26 +213,25 @@ void oscEvent(OscMessage m) {
           {
              println("Sword Contact! ");
              isSwordFight = true;
-             fight_sound.play();
+             light_saber_duel.play();
              exit();
           }
         }
         
-        if(isSwordFight)
+        if(isSwordFight == false)
         {
-          exit();
-        }
-        
-        j1.hit();
-        println("P2: " + j2.life);
-        if(j1.life > 0) 
-        {       
-          println("Life of player 1 : " + j1.life);
-        }
-        else
-        {
-           println("Player 2 won");
-           exit();
+          light_saber_music.play();
+          j1.hit();
+          println("P2: " + j2.life);
+          if(j1.life > 0) 
+          {       
+            println("Life of player 1 : " + j1.life);
+          }
+          else
+          {
+             println("Player 2 won");
+             exit();
+          }
         }
       }   
     }
