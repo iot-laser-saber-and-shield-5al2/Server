@@ -10,6 +10,7 @@ SoundFile fight_sound;
 SoundFile starwars_music;
 SoundFile light_saber_music;
 SoundFile light_saber_duel;
+SoundFile win_sound;
 OscP5 osc;
 ControlP5 cp;
 
@@ -53,10 +54,9 @@ void setup() {
   starwars_music = new SoundFile(this, "starwars_music.mp3");
   light_saber_music = new SoundFile(this, "LightSaberContact.wav");
   light_saber_duel = new SoundFile(this, "LightSaberDuel.wav");
+  win_sound = new SoundFile(this, "ChewBaccaWin.wav");
   fight_sound.play();
   starwars_music.play();
-  //light_saber_music.play();
-  //light_saber_duel.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -202,6 +202,8 @@ void oscEvent(OscMessage m) {
           else
           {
              println("Player 1 won");
+             win_sound.play();
+             delay(2000);
              exit();
           }
         }  
@@ -231,6 +233,8 @@ void oscEvent(OscMessage m) {
           else
           {
              println("Player 2 won");
+             win_sound.play();
+             delay(2000);
              exit();
           }
         }
