@@ -134,11 +134,11 @@ void oscEvent(OscMessage m) {
 
   if ( j1.capteur == null){
     j1.capteur = m.get(3).toString();
-    println("Joueur 1 possède le capteur " + j1.capteur);
+    println("Player 1 got the captor " + j1.capteur);
   }
   else if(  j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
     j2.capteur = m.get(3).toString();
-    println("Joueur 2 possède le capteur " + j2.capteur);
+    println("Player 2 got the captor " + j2.capteur);
   }
   
   if (log.size()==800) {
@@ -161,26 +161,26 @@ void oscEvent(OscMessage m) {
         j2.hit();
         println(j2.life);
         if(j2.life > 0) 
-          {       
-            println("valeur de vie joueur 2 : " + j2.life);
-          }
+        {       
+          println("Life of player 2 : " + j2.life);
+        }
         else
-          {
-             println("Joueur 1 a gagner ");
-             exit();
-          }
+        {
+           println("Player 1 won");
+           exit();
+        }
       }
       else if (j2.capteur.equals(data.name)){  
         j1.hit();
         if(j1.life > 0) 
-          {       
-            println("valeur de vie joueur 1 : " + j1.life);
-          }
+        {       
+          println("Life of player 1 : " + j1.life);
+        }
         else
-          {
-             println("Joueur 2 a gagner");
-             exit();
-          }
+        {
+           println("Player 2 won");
+           exit();
+        }
       }
       
     }
