@@ -43,7 +43,7 @@ void setup() {
   background(0);
   noStroke();
   fight_sound = new SoundFile(this, "fight_sound.mp3");
-  starwars_music = new SoundFile(this, "starwars_music.mp4");
+  starwars_music = new SoundFile(this, "star.mp4");
   fight_sound.play();
   starwars_music.play();
 }
@@ -167,11 +167,11 @@ void oscEvent(OscMessage m) {
         println(j2.life);
         if(j2.life > 0) 
           {       
-            println("valeur de vie joueur 2 : " + j2.life);
+            println("valeur de vie joueur bleu : " + j2.life);
           }
         else
           {
-             println("Joueur 1 a gagner ");
+             println("Joueur bleu a gagner ");
              exit();
           }
       }
@@ -179,11 +179,11 @@ void oscEvent(OscMessage m) {
         j1.hit();
         if(j1.life > 0) 
           {       
-            println("valeur de vie joueur 1 : " + j1.life);
+            println("valeur de vie joueur rouge : " + j1.life);
           }
         else
           {
-             println("Joueur 2 a gagner");
+             println("Joueur rouge a gagner");
              exit();
           }
       }
