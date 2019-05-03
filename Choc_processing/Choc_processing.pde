@@ -3,12 +3,16 @@ import java.util.*;
 import oscP5.*;
 import controlP5.*;
 import static controlP5.ControlP5.*;
-import processing.serial.*; // ajouter pour pouvoir communiquer avec Arduino
+import processing.serial.*;
 import processing.sound.*;
+
 SoundFile fight_sound;
 SoundFile starwars_music;
+SoundFile light_saber_music;
+SoundFile light_saber_duel;
 OscP5 osc;
 ControlP5 cp;
+
 int vie = 400 ;
 //boolean combat_en_cours = true;
 List<Fighters> fighters = new ArrayList();
@@ -17,6 +21,7 @@ Fighters j2 = new Fighters();
 class Fighters {
   int life = 400;
   String capteur;
+  List<Data> datas = new ArrayList();
   public void hit(){
     this.life = this.life - 20;
   }
@@ -27,7 +32,6 @@ class Fighters {
 
 void setup() {
   fullScreen(P3D);
-  //size(1280, 600, P3D);
 
   smooth(8);
   hint(DISABLE_DEPTH_TEST);
@@ -42,10 +46,20 @@ void setup() {
 
   background(0);
   noStroke();
+  
+  // music
   fight_sound = new SoundFile(this, "fight_sound.mp3");
+<<<<<<< HEAD
   starwars_music = new SoundFile(this, "star.mp4");
+=======
+  starwars_music = new SoundFile(this, "starwars_music.mp3");
+  light_saber_music = new SoundFile(this, "LightSaberContact.wav");
+  light_saber_duel = new SoundFile(this, "LightSaberDuel.wav");
+>>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
   fight_sound.play();
   starwars_music.play();
+  //light_saber_music.play();
+  //light_saber_duel.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -121,73 +135,134 @@ void render() {
 class Data {
   float ax, ay, az;
   String name;
+  int hours, minutes, seconds;
+  boolean isChoc = false;
   public String toString() {
     return ax+"\t"+ay+"\t"+az+"\t"+ name + "\n";
   }
 }
 
-
+boolean isThreshold(Data data)
+{
+  return (abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4;
+}
 
 void oscEvent(OscMessage m) {
-  
-  //print("addrpattern: "+m.addrPattern());
-  //println(" - floatValue: "+m.get(0).floatValue());
 
   if ( j1.capteur == null){
-    j1.capteur =  m.get(3).toString();
-    println("Joueur 1 possède le capteur " + j1.capteur);
+    j1.capteur = m.get(3).toString();
+    println("Player 1 got the captor " + j1.capteur);
   }
-  else if(  j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
-    j2.capteur =   m.get(3).toString();
-    println("Joueur 2 possède le capteur " + j2.capteur);
+  else if(j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
+    j2.capteur = m.get(3).toString();
+    println("Player 2 got the captor " + j2.capteur);
   }
   
   if (log.size()==800) {
     log.remove(0);
   }
+  
   if (m.addrPattern().startsWith("/IMU")) {
     Data data = new Data();
     data.ax = m.get(0).floatValue();
     data.ay = m.get(1).floatValue();
     data.az = m.get(2).floatValue(); // not used here
     data.name = m.get(3).toString(); // not used here
-
-    //println(data);
+    data.hours = hour();
+    data.minutes = minute();
+    data.seconds = second();
+    
     log.add(data);
     
-    //print("valeur absolue : " );
-    //println(abs(data.ax) + abs(data.ay) + abs(data.az));
-    
-    if((abs(data.ax) + abs(data.ay) + abs(data.az)) >= 4)
+    if(isThreshold(data))
     {
-      fight_sound.play();
+      //fight_sound.play();
+      data.isChoc = true;
       println("---------------------------------------------------------------------------------------------------------------------------");
+      boolean isSwordFight = false;
       if(j1.capteur.equals(data.name)){
-        j2.hit();
-        println(j2.life);
-        if(j2.life > 0) 
+        List<Data> subj2Data = j2.datas.subList(j2.datas.size() -6, j2.datas.size() -1);
+        for(Data dataj2 : subj2Data)
+        {
+          if(dataj2.isChoc)
+          {
+             println("Sword Contact! ");
+             isSwordFight = true;
+             light_saber_duel.play();
+             break;
+          }
+        }
+        
+        if(isSwordFight == false)
+        {
+          light_saber_music.play();
+          j2.hit();
+          println("P1: " + j1.life);
+          if(j2.life > 0) 
           {       
+<<<<<<< HEAD
             println("valeur de vie joueur bleu : " + j2.life);
+=======
+            println("Life of player 2 : " + j2.life);
+>>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
           }
-        else
+          else
           {
+<<<<<<< HEAD
              println("Joueur bleu a gagner ");
+=======
+             println("Player 1 won");
+>>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
              exit();
           }
+        }  
       }
-      else if (j2.capteur.equals(data.name)){  
-        j1.hit();
-        if(j1.life > 0) 
-          {       
-            println("valeur de vie joueur rouge : " + j1.life);
-          }
-        else
+      else if (j2.capteur.equals(data.name)){
+        List<Data> subj1Data = j1.datas.subList(j1.datas.size() -6, j1.datas.size() -1);
+        for(Data dataj1 : subj1Data)
+        {
+          if(dataj1.isChoc)
           {
-             println("Joueur rouge a gagner");
+             println("Sword Contact! ");
+             isSwordFight = true;
+             light_saber_duel.play();
              exit();
           }
-      }
-      
+        }
+        
+        if(isSwordFight == false)
+        {
+          light_saber_music.play();
+          j1.hit();
+          println("P2: " + j2.life);
+          if(j1.life > 0) 
+          {       
+<<<<<<< HEAD
+            println("valeur de vie joueur rouge : " + j1.life);
+=======
+            println("Life of player 1 : " + j1.life);
+>>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
+          }
+          else
+          {
+<<<<<<< HEAD
+             println("Joueur rouge a gagner");
+=======
+             println("Player 2 won");
+>>>>>>> 180f5dce37e3ce93a5b16adf15fd79b9c2fe490b
+             exit();
+          }
+        }
+      }   
+    }
+    
+    if(j1.capteur.equals(data.name))
+    {
+      j1.datas.add(data);
+    }
+    else if (j2.capteur.equals(data.name))
+    {
+      j2.datas.add(data);
     }
   }
   
