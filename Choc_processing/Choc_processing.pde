@@ -8,6 +8,7 @@ import processing.sound.*;
 
 SoundFile fight_sound;
 SoundFile starwars_music;
+SoundFile light_saber_music;
 OscP5 osc;
 ControlP5 cp;
 
@@ -48,8 +49,10 @@ void setup() {
   // music
   fight_sound = new SoundFile(this, "fight_sound.mp3");
   starwars_music = new SoundFile(this, "starwars_music.mp3");
+  light_saber_music = new SoundFile(this, "LightSaberContact.wav");
   fight_sound.play();
   starwars_music.play();
+  light_saber_music.play();
 }
 
 float rotY = 0, nrotY = 0;
@@ -143,7 +146,7 @@ void oscEvent(OscMessage m) {
     j1.capteur = m.get(3).toString();
     println("Player 1 got the captor " + j1.capteur);
   }
-  else if(  j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
+  else if(j1.capteur != null  && j1.capteur != m.get(3).toString() &&  j2.capteur == null ){
     j2.capteur = m.get(3).toString();
     println("Player 2 got the captor " + j2.capteur);
   }
@@ -166,9 +169,11 @@ void oscEvent(OscMessage m) {
     
     if(isThreshold(data))
     {
-      fight_sound.play();
+      //fight_sound.play();
+      light_saber_music.play();
       data.isChoc = true;
       println("---------------------------------------------------------------------------------------------------------------------------");
+      boolean isSwordFight = false;
       if(j1.capteur.equals(data.name)){
         List<Data> subj2Data = j2.datas.subList(j2.datas.size() -6, j2.datas.size() -1);
         for(Data dataj2 : subj2Data)
@@ -176,12 +181,17 @@ void oscEvent(OscMessage m) {
           if(dataj2.isChoc)
           {
              println("Sword Contact! ");
-             exit();
+             isSwordFight = true;
+             fight_sound.play();
+             break;
           }
         }
-        
+        if(isSwordFight)
+        {
+          exit();
+        }
         j2.hit();
-        println(j2.life);
+        println("P1: " + j1.life);
         if(j2.life > 0) 
         {       
           println("Life of player 2 : " + j2.life);
@@ -199,11 +209,19 @@ void oscEvent(OscMessage m) {
           if(dataj1.isChoc)
           {
              println("Sword Contact! ");
+             isSwordFight = true;
+             fight_sound.play();
              exit();
           }
         }
         
+        if(isSwordFight)
+        {
+          exit();
+        }
+        
         j1.hit();
+        println("P2: " + j2.life);
         if(j1.life > 0) 
         {       
           println("Life of player 1 : " + j1.life);
